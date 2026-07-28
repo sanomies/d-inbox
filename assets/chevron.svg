@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="4.58333" height="8" viewBox="0 0 4.58333 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group 3 Copy">
+<mask id="mask0_0_156" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="5" height="8">
+<path id="Clip 2" fill-rule="evenodd" clip-rule="evenodd" d="M0 0H4.58333V8H0V0Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_0_156)">
+<path id="Fill 1" fill-rule="evenodd" clip-rule="evenodd" d="M0.589089 7.5998C0.438232 7.5998 0.287375 7.5414 0.172661 7.4238C-0.0575536 7.1894 -0.0575536 6.8102 0.172661 6.5758L2.8983 3.7998L0.172661 1.0238C-0.0575536 0.7894 -0.0575536 0.4102 0.172661 0.1758C0.402875 -0.0586 0.775304 -0.0586 1.00552 0.1758L4.14838 3.3758C4.37859 3.6102 4.37859 3.9894 4.14838 4.2238L1.00552 7.4238C0.890804 7.5414 0.739946 7.5998 0.589089 7.5998" fill="#708597"/>
+</g>
+</g>
+</svg>

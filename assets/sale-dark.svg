@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Group">
+<g id="Path">
+</g>
+<path id="Path_2" fill-rule="evenodd" clip-rule="evenodd" d="M8.806 19.71H6.471C5.267 19.71 4.29 18.734 4.29 17.529V16.097C4.29 15.519 4.06 14.964 3.651 14.555L2.638 13.542C1.786 12.69 1.786 11.31 2.638 10.458L3.651 9.445C4.06 9.036 4.29 8.482 4.29 7.903V6.471C4.29 5.267 5.266 4.29 6.471 4.29H7.903C8.481 4.29 9.036 4.06 9.445 3.651L10.458 2.638C11.31 1.786 12.69 1.786 13.542 2.638L14.555 3.651C14.964 4.06 15.519 4.29 16.097 4.29H17.529C18.733 4.29 19.71 5.266 19.71 6.471V7.903C19.71 8.481 19.94 9.036 20.349 9.445L21.362 10.458C22.214 11.31 22.214 12.69 21.362 13.542L20.349 14.555C19.94 14.964 19.71 15.519 19.71 16.097V17.529C19.71 18.733 18.734 19.71 17.529 19.71H16.097C15.519 19.71 14.964 19.94 14.555 20.349L13.542 21.362C12.69 22.214 11.31 22.214 10.458 21.362L8.806 19.71Z" stroke="#050F19" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Path_3" d="M9 15L15 9" stroke="#050F19" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Path_4" d="M9.249 9C9.111 9 8.999 9.112 9 9.25C9 9.388 9.112 9.5 9.25 9.5C9.388 9.5 9.5 9.388 9.5 9.25C9.5 9.112 9.388 9 9.249 9" stroke="#050F19" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Path_5" d="M14.749 14.5C14.611 14.5 14.499 14.612 14.5 14.75C14.5 14.888 14.612 15 14.75 15C14.888 15 15 14.888 15 14.75C15 14.612 14.888 14.5 14.749 14.5" stroke="#050F19" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>
