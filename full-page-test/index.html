@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal inbox — Teavitused</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --delfi-black: #050F19;
+    --delfi-blue: #3858F5;
+    --delfi-separatorgray: #DEDFE0;
+    --delfi-darkgray: #708597;
+    --delfi-lightblue: #E9F6FF;
+    --delfi-darkblue: #0F134B;
+    --delfi-white: #FFFFFF;
+    --delfi-topbar: #EDF2F4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--delfi-white);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    padding-bottom: 64px;
+    font-family: 'Inter', sans-serif;
+    color: var(--delfi-black);
+  }
+
+  /* ── Top utility bar ─────────────────────────────── */
+  .utility-bar {
+    background: var(--delfi-topbar);
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+  }
+  .utility-bar-inner {
+    position: relative;
+    flex: 1 0 0;
+    max-width: 1200px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .utility-links,
+  .utility-center {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 11px;
+    color: var(--delfi-darkgray);
+    white-space: nowrap;
+  }
+  .utility-center {
+    gap: 56px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .utility-item { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+  .utility-item:hover, .utility-links span:hover { color: var(--delfi-black); }
+  .utility-links span { cursor: pointer; }
+  .chevron {
+    width: 8px;
+    height: 4.58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .chevron img { width: 4.58px; height: 8px; transform: rotate(90deg); }
+
+  /* ── Main nav ────────────────────────────────────── */
+  .main-nav {
+    background: var(--delfi-white);
+    border-bottom: 1px solid var(--delfi-separatorgray);
+    width: 100%;
+    padding: 20px 10px;
+    display: flex;
+    justify-content: center;
+  }
+  .main-nav-inner {
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-logo { width: 84.35px; height: 29.8px; display: block; cursor: pointer; }
+  .nav-links {
+    display: flex;
+    gap: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #222;
+    white-space: nowrap;
+  }
+  .nav-links span { cursor: pointer; }
+  .nav-links span:hover { color: var(--delfi-blue); }
+  .nav-right { display: flex; gap: 16px; align-items: center; }
+  .konto-chip {
+    position: relative;
+    background: var(--delfi-topbar);
+    display: flex;
+    gap: 2px;
+    align-items: center;
+    justify-content: center;
+    padding: 4px 8px 4px 4px;
+    border-radius: 100px;
+    width: 80px;
+    cursor: pointer;
+  }
+  .konto-icon {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+  }
+  .konto-icon-leaf {
+    position: absolute;
+    inset: 12.5% 2.93% 14.38% 12.5%;
+  }
+  .konto-icon-leaf img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .konto-chip span { font-size: 12px; font-weight: 600; color: var(--delfi-black); }
+  .konto-dot {
+    position: absolute;
+    top: 0;
+    right: 0.17px;
+    width: 8px;
+    height: 8px;
+    background: var(--delfi-blue);
+    outline: 2px solid var(--delfi-white);
+    border-radius: 100px;
+  }
+  .nav-icons { display: flex; gap: 21px; align-items: center; }
+
+  /* ── Konto dropdown menu ─────────────────────────── */
+  .main-nav-inner { position: relative; }
+  .konto-menu {
+    position: absolute;
+    top: calc(100% + 18px);
+    right: 35px;
+    width: 230px;
+    background: var(--delfi-white);
+    border-radius: 8px;
+    padding: 16px 12px;
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.15));
+    z-index: 200;
+  }
+  .konto-menu.open { display: flex; }
+  .konto-greeting { display: flex; flex-direction: column; gap: 6px; }
+  .konto-name { font-size: 14px; font-weight: 600; line-height: 11px; color: var(--delfi-black); }
+  .konto-email { font-size: 11px; line-height: 11px; color: var(--delfi-darkgray); }
+  .digi-button {
+    width: 100%;
+    height: 36px;
+    background: #00d46e;
+    border: none;
+    border-radius: 100px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px 8px 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 10px;
+    color: var(--delfi-darkblue);
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .digi-button:hover { background: #00c566; }
+  .digi-icon { position: relative; width: 22px; height: 22px; flex-shrink: 0; }
+  .digi-icon img { position: absolute; inset: -6.5%; width: 113%; height: 113%; }
+  .konto-menu-divider { height: 1px; width: 100%; background: var(--delfi-separatorgray); }
+  .konto-menu-items { display: flex; flex-direction: column; gap: 24px; }
+  .konto-menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .kmi-left { display: flex; gap: 16px; align-items: center; }
+  .kmi-label-wrap { display: flex; gap: 6px; align-items: center; }
+  .kmi-icon { position: relative; width: 24px; height: 24px; flex-shrink: 0; }
+  .kmi-icon img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .kmi-icon img[style] { width: auto; height: auto; }
+  .kmi-label { font-size: 14px; font-weight: 400; line-height: 12px; color: var(--delfi-black); }
+  .konto-menu-item:hover .kmi-label { color: var(--delfi-blue); }
+  .kmi-chevron { width: 5.68px; height: 9.58px; transform: rotate(180deg); flex-shrink: 0; }
+  .nav-icons img { display: block; cursor: pointer; }
+  .icon-search { width: 15.5px; height: 15.5px; }
+  .icon-menu { width: 17.5px; height: 11.5px; }
+
+  /* ── Inbox panel (list) ──────────────────────────── */
+  .inbox {
+    width: 676px;
+    max-width: calc(100vw - 32px);
+    display: flex;
+    flex-direction: column;
+  }
+  .inbox-title {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+    padding: 16px 0;
+  }
+  .tabs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 16px;
+  }
+  .tab-group { display: flex; gap: 4px; align-items: center; }
+  .tab {
+    height: 30px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 100px;
+    border: none;
+    background: var(--delfi-white);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--delfi-darkgray);
+    cursor: pointer;
+  }
+  .tab.active {
+    background: var(--delfi-black);
+    font-weight: 600;
+    color: var(--delfi-white);
+  }
+  .tab:not(.active):hover { background: #f2f5f7; }
+  .tab.active .tab-badge {
+    background: var(--delfi-white);
+    color: var(--delfi-black);
+  }
+  .tab-badge {
+    width: 18px;
+    height: 18px;
+    background: var(--delfi-blue);
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--delfi-white);
+  }
+  .mark-all {
+    border: none;
+    background: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--delfi-blue);
+    cursor: pointer;
+    padding: 0;
+  }
+  .mark-all:hover { text-decoration: underline; }
+
+  /* ── Message rows ────────────────────────────────── */
+  .message-list { display: flex; flex-direction: column; gap: 8px; }
+  .message {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px;
+    cursor: pointer;
+    text-align: left;
+    border: none;
+    background: none;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+  }
+  .message.unread {
+    background: var(--delfi-lightblue);
+    border-radius: 16px;
+  }
+  .message.unread:hover { background: #ddf0fd; }
+  .message.read:hover { background: #f7fafc; border-radius: 16px; }
+  .list-divider {
+    height: 1px;
+    width: 100%;
+    background: var(--delfi-separatorgray);
+    margin: -4px 0; /* keeps row-to-row spacing at the same 9px the row borders produced */
+    flex-shrink: 0;
+  }
+  .message-icon {
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .message.unread .message-icon { background: var(--delfi-blue); }
+  .message.read .message-icon { background: var(--delfi-lightblue); }
+  .message-icon img { width: 24px; height: 24px; display: block; }
+  .message-text { flex: 1 0 0; min-width: 1px; display: flex; flex-direction: column; gap: 4px; }
+  .message-title { font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--delfi-black); }
+  .message.unread .message-title { font-weight: 700; }
+  .message-snippet {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--delfi-black);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .empty-state {
+    padding: 32px 16px;
+    font-size: 14px;
+    color: var(--delfi-darkgray);
+    text-align: center;
+  }
+  .message:focus-visible {
+    outline: 2px solid var(--delfi-blue);
+    outline-offset: 2px;
+    border-radius: 16px;
+  }
+  .message.removing {
+    opacity: 0;
+    transform: translateX(12px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+
+  /* ── Row kebab menu ──────────────────────────────── */
+  .row-actions {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .message-time {
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--delfi-darkgray);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .kebab-btn {
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: none;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0;
+    overflow: hidden;
+    transition: opacity 0.15s, background 0.15s;
+  }
+  .kebab-btn img {
+    width: 13px;
+    height: 3px;
+    display: block;
+    transform: rotate(90deg);
+  }
+  .message:hover .kebab-btn,
+  .message:focus-within .kebab-btn,
+  .kebab-btn.open { opacity: 1; }
+  .message.read .kebab-btn { background: var(--delfi-topbar); }
+  .message.unread .kebab-btn {
+    background: #d3e7f5;
+    backdrop-filter: blur(4px);
+  }
+  .message.read .kebab-btn:hover, .message.read .kebab-btn.open { background: #e2e9ee; }
+  .message.unread .kebab-btn:hover, .message.unread .kebab-btn.open { background: #c4def2; }
+  .kebab-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: var(--delfi-white);
+    border: 1px solid var(--delfi-separatorgray);
+    border-radius: 12px;
+    box-shadow: 0px 2px 6px 0px rgba(15, 26, 46, 0.06), 0px 12px 32px -8px rgba(15, 26, 46, 0.18);
+    padding: 4px;
+    min-width: 184px;
+    display: none;
+    z-index: 50;
+  }
+  .kebab-menu.open { display: block; }
+  .kebab-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+    border: none;
+    background: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--delfi-black);
+    text-align: left;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .kebab-item:hover { background: #f2f5f7; }
+  .kebab-item.danger { color: #d92d20; }
+  .kebab-item svg { flex-shrink: 0; }
+
+  /* ── Full-page message view ──────────────────────── */
+  .message-view {
+    display: flex;
+    flex-direction: column;
+    animation: view-fade 0.2s ease;
+  }
+  .message-view[hidden] { display: none; }
+  @keyframes view-fade { from { opacity: 0; } to { opacity: 1; } }
+  .view-header {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding: 16px 0;
+  }
+  .back-btn {
+    border: none;
+    background: none;
+    padding: 7px;
+    margin: -7px;
+    border-radius: 100px;
+    display: flex;
+    cursor: pointer;
+  }
+  .back-btn:hover { background: var(--delfi-topbar); }
+  .back-btn img { width: 18px; height: 18px; display: block; }
+  .view-title {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .view-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .view-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  .detail-meta { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+  .detail-badge {
+    background: var(--delfi-lightblue);
+    padding: 8px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+    color: #000;
+    white-space: nowrap;
+  }
+  .detail-time { font-size: 12px; color: var(--delfi-darkgray); }
+  .detail-title { font-size: 18px; font-weight: 600; line-height: 1.4; }
+  .detail-divider {
+    height: 1px;
+    width: 100%;
+    background: var(--delfi-separatorgray);
+    flex-shrink: 0;
+  }
+
+  /* Hero illustration (Fairmus offer) */
+  .detail-hero {
+    position: relative;
+    height: 250px;
+    border-radius: 16px;
+    background: #f2f2fe;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .hero-phone-wrap {
+    position: absolute;
+    left: 270px;
+    top: -21.51px;
+    width: 344.57px;
+    height: 343.19px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-phone-rotate { transform: rotate(-20.04deg); flex: none; }
+  .hero-phone-rotate img {
+    width: 269.37px;
+    height: 267.07px;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+  .hero-logo-piece { position: absolute; }
+  .hero-logo-piece img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hero-pill {
+    position: absolute;
+    left: -30px;
+    top: 23px;
+    width: 164px;
+    background: var(--delfi-white);
+    border-radius: 100px;
+    padding: 10px 51px;
+    display: flex;
+    align-items: center;
+  }
+  .hero-pill span {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--delfi-darkblue);
+    white-space: nowrap;
+  }
+  .hero-inset-shadow {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0px 0px 12px 0px rgba(0, 0, 0, 0.05);
+    pointer-events: none;
+  }
+
+  .detail-text { font-size: 14px; line-height: 1.6; }
+  .detail-text .lead { font-weight: 700; }
+  .detail-text .rest { margin-top: 1.6em; }
+
+  .detail-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    padding-bottom: 8px;
+  }
+  .cta-button {
+    background: var(--delfi-blue);
+    border: none;
+    border-radius: 30px;
+    padding: 16px 36px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 10px;
+    color: var(--delfi-white);
+    cursor: pointer;
+  }
+  .cta-button:hover { background: #2c46d6; }
+  .cta-note { font-size: 12px; color: var(--delfi-darkgray); }
+
+  @media (max-width: 1240px) {
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header style="width:100%">
+    <div class="utility-bar">
+      <div class="utility-bar-inner">
+        <div class="utility-center">
+          <span class="utility-item">Delfi</span>
+          <span class="utility-item">Ajalehed
+            <span class="chevron"><img src="assets/chevron.svg" alt=""></span>
+          </span>
+          <span class="utility-item">Ajakirjad
+            <span class="chevron"><img src="assets/chevron.svg" alt=""></span>
+          </span>
+        </div>
+        <div class="utility-links">
+          <span>Privaatsussätted</span>
+          <span>Saada vihje</span>
+          <span>Kontakt</span>
+          <span>Reklaam</span>
+        </div>
+      </div>
+    </div>
+    <div class="main-nav">
+      <div class="main-nav-inner">
+        <a href="https://www.delfi.ee" style="display: flex"><img class="nav-logo" src="assets/delfi-logo.svg" alt="Delfi"></a>
+        <nav class="nav-links">
+          <span>RUS</span><span>Ärileht</span><span>Sport</span><span>Kroonika</span>
+          <span>Eesti Naine</span><span>Kultuur</span><span>Maaleht</span><span>Ekspress</span><span>LP</span>
+        </nav>
+        <div class="nav-right">
+          <div class="konto-chip" id="konto-chip" role="button" tabindex="0" aria-haspopup="true">
+            <div class="konto-icon">
+              <div class="konto-icon-leaf"><img src="assets/konto-icon.svg" alt=""></div>
+            </div>
+            <span>Konto</span>
+            <div class="konto-dot" id="konto-dot"></div>
+          </div>
+          <div class="nav-icons">
+            <img class="icon-search" src="assets/search.svg" alt="Otsi">
+            <img class="icon-menu" src="assets/menu.svg" alt="Menüü">
+          </div>
+          <div class="konto-menu" id="konto-menu">
+            <div class="konto-greeting">
+              <p class="konto-name">Tere, Tarmo!</p>
+              <p class="konto-email">tarmo.paju@ekspressmeedia.ee</p>
+            </div>
+            <button class="digi-button">
+              <span class="digi-icon"><img src="assets/menu-digi.svg" alt=""></span>
+              Tee digitellimus
+            </button>
+            <div class="konto-menu-divider"></div>
+            <nav class="konto-menu-items">
+              <button class="konto-menu-item" id="konto-menu-teavitused">
+                <span class="kmi-left">
+                  <span class="kmi-icon"><img src="assets/menu-bell.svg" alt=""></span>
+                  <span class="kmi-label-wrap">
+                    <span class="kmi-label">Teavitused</span>
+                    <span class="tab-badge" id="konto-menu-badge">2</span>
+                  </span>
+                </span>
+                <img class="kmi-chevron" src="assets/menu-chevron.svg" alt="">
+              </button>
+              <button class="konto-menu-item">
+                <span class="kmi-left">
+                  <span class="kmi-icon"><img src="assets/menu-user.svg" alt="" style="inset: 12.5% 10.31% 10.31% 12.5%"></span>
+                  <span class="kmi-label">Minu profiil</span>
+                </span>
+                <img class="kmi-chevron" src="assets/menu-chevron.svg" alt="">
+              </button>
+              <button class="konto-menu-item">
+                <span class="kmi-left">
+                  <span class="kmi-icon"><img src="assets/menu-subs.svg" alt="" style="inset: 2px"></span>
+                  <span class="kmi-label">Minu tellimused</span>
+                </span>
+                <img class="kmi-chevron" src="assets/menu-chevron.svg" alt="">
+              </button>
+              <button class="konto-menu-item">
+                <span class="kmi-left">
+                  <span class="kmi-icon"><img src="assets/menu-bookmark.svg" alt="" style="inset: 8.33% 18.56% 8.33% 20.83%"></span>
+                  <span class="kmi-label">Loe hiljem</span>
+                </span>
+                <img class="kmi-chevron" src="assets/menu-chevron.svg" alt="">
+              </button>
+              <button class="konto-menu-item">
+                <span class="kmi-left">
+                  <span class="kmi-icon"><img src="assets/menu-help.svg" alt=""></span>
+                  <span class="kmi-label">Klienditugi</span>
+                </span>
+                <img class="kmi-chevron" src="assets/menu-chevron.svg" alt="">
+              </button>
+            </nav>
+            <div class="konto-menu-divider"></div>
+            <button class="konto-menu-item">
+              <span class="kmi-left">
+                <span class="kmi-icon"><img src="assets/menu-logout.svg" alt=""></span>
+                <span class="kmi-label">Logi välja</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Inbox -->
+  <main class="inbox">
+    <div id="list-view">
+      <h1 class="inbox-title">Teavitused</h1>
+      <div class="tabs">
+        <div class="tab-group">
+          <button class="tab active" id="tab-all">Kõik</button>
+          <button class="tab" id="tab-unread">Lugemata <span class="tab-badge" id="unread-badge">2</span></button>
+        </div>
+        <button class="mark-all" id="mark-all">Märgi kõik loetuks</button>
+      </div>
+      <div class="message-list" id="message-list"></div>
+    </div>
+
+    <!-- Full-page message view -->
+    <section class="message-view" id="message-view" hidden>
+      <div class="view-header">
+        <button class="back-btn" id="back-btn" aria-label="Tagasi">
+          <img src="assets/back-arrow.svg" alt="">
+        </button>
+        <h1 class="view-title">Teavitused</h1>
+      </div>
+      <div class="view-content">
+        <div class="view-meta-row">
+          <h2 class="detail-title" id="detail-title"></h2>
+          <div class="detail-meta">
+            <span class="detail-badge" id="detail-badge">PAKKUMINE</span>
+            <span class="detail-time" id="detail-time">Täna 09:12</span>
+          </div>
+        </div>
+        <div class="detail-divider"></div>
+        <div class="detail-hero" id="detail-hero">
+          <div class="hero-phone-wrap">
+            <div class="hero-phone-rotate"><img src="assets/hero-fairmus.png" alt=""></div>
+          </div>
+          <div class="hero-logo-piece" style="inset: 71.8% 90.21% 12.52% 3.99%"><img src="assets/fairmus-subtract.svg" alt=""></div>
+          <div class="hero-logo-piece" style="inset: 75% 86.63% 15.9% 11.67%"><img src="assets/fairmus-v0.svg" alt=""></div>
+          <div class="hero-logo-piece" style="inset: 77.63% 84.4% 15.78% 13.49%"><img src="assets/fairmus-v1.svg" alt=""></div>
+          <div class="hero-logo-piece" style="inset: 75% 83.26% 15.9% 16%"><img src="assets/fairmus-v2.svg" alt=""></div>
+          <div class="hero-logo-piece" style="inset: 77.63% 81.34% 15.9% 17.17%"><img src="assets/fairmus-v3.svg" alt=""></div>
+          <div class="hero-logo-piece" style="inset: 77.63% 77.41% 15.9% 18.99%"><img src="assets/fairmus-v4.svg" alt=""></div>
+          <div class="hero-logo-piece" style="inset: 77.75% 74.79% 15.77% 23.02%"><img src="assets/fairmus-v5.svg" alt=""></div>
+          <div class="hero-logo-piece" style="inset: 77.63% 72.39% 15.78% 25.55%"><img src="assets/fairmus-v6.svg" alt=""></div>
+          <div class="hero-pill"><span>TELLIJA EELIS</span></div>
+          <div class="hero-inset-shadow"></div>
+        </div>
+        <div class="detail-text">
+          <p class="lead" id="detail-lead"></p>
+          <p class="rest" id="detail-rest"></p>
+          <p class="rest" id="detail-rest2"></p>
+        </div>
+        <div class="detail-cta">
+          <button class="cta-button" id="detail-cta"></button>
+          <span class="cta-note" id="detail-note"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+<script>
+  const OFFER_BODY = {
+    lead: 'Sinu personaalne pakkumine: Kogupaketi aastatellimus on praegu –40% soodsam. Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
+    rest: 'Kogupakett annab piiramatu ligipääsu kõikidele Delfi väljaannetele — Ärileht, Kroonika, Eesti Naine, Maaleht ja Ekspress —, lisaks reklaamivabale lugemisele ja eksklusiivsetele tellijalugudele. Pakkumine on personaalne ja kehtib ainult sinu kontole.',
+    cta: 'Kasuta pakkumist',
+    note: 'Pakkumine kehtib kuni 31. juuli 2026.'
+  };
+  const EDITORIAL_BODY = {
+    lead: 'Meie toimetajad valisid välja viis lugu, mida sel nädalal kindlasti lugeda tasub.',
+    rest: 'Selle nädala valikus on põhjalik uurimus Eesti energiaturust, intervjuu Euroopa filmiauhinna võitjaga, reportaaž Saaremaa suvefestivalilt ning kaks arvamuslugu, mis on tekitanud elava arutelu. Head lugemist!',
+    cta: 'Loe lugusid',
+    note: 'Uus valik ilmub igal reedel.'
+  };
+
+  const messages = [
+    {
+      id: 1, unread: true, hero: true,
+      badge: 'PAKKUMINE', time: 'Täna 09:12',
+      iconWhite: 'assets/gift-white.svg', iconDark: 'assets/gift-dark.svg',
+      title: 'Fairmusi sisu suve lõpuni täiesti tasuta!',
+      snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
+      lead: 'Tellija eelis annab sulle võimaluse nautida Fairmuse sisu suve lõpuni tasuta. Kasuta pakkumist ja kuula piiranguteta.',
+      rest: 'Avasta maailma tippmuusikute esitusi, inspireerivaid kontserdisalvestusi ja hoolikalt valitud muusikaprogramme, mis sobivad nii rahulikeks õhtuteks kui ka igapäevaseks taustaks. Fairmus toob sinuni klassikalise muusika parimad hetked mugavalt ühes kohas, et saaksid kuulata just siis, kui sulle sobib.',
+      rest2: 'Kasuta võimalust tutvuda rikkaliku sisukoguga, avastada uusi lemmikuid ning kogeda muusikat täiesti uuel viisil. Naudi kvaliteetset heli, piiramatut ligipääsu ja inspireerivat kuulamiskogemust kuni suve lõpuni – täiesti tasuta. Ära jäta seda võimalust kasutamata ning tee oma suvi veelgi meeldejäävamaks Fairmuse saatel.',
+      cta: 'Kasuta pakkumist', note: 'Pakkumine kehtib kuni 31. juuli 2026.'
+    },
+    {
+      id: 2, unread: true, hero: false,
+      badge: 'PAKKUMINE', time: 'Täna 08:47',
+      iconWhite: 'assets/sale-white.svg', iconDark: 'assets/sale-dark.svg',
+      title: 'Sulle: –40% Kogupaketi aastatellimusest',
+      snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
+      ...OFFER_BODY
+    },
+    {
+      id: 3, unread: false, hero: false,
+      badge: 'TEAVITUS', time: 'Eile 17:30',
+      iconWhite: 'assets/newspaper-white.svg', iconDark: 'assets/newspaper.svg',
+      title: 'Toimetus soovitab: nädala parimad lood',
+      snippet: 'Viis lugu, mida meie toimetajad sel nädalal esile tõstavad.',
+      ...EDITORIAL_BODY
+    },
+    {
+      id: 4, unread: false, hero: false,
+      badge: 'PAKKUMINE', time: 'Eile 11:02',
+      iconWhite: 'assets/gift-white.svg', iconDark: 'assets/gift-dark.svg',
+      title: 'Sulle: –40% Kogupaketi aastatellimusest',
+      snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
+      ...OFFER_BODY
+    },
+    {
+      id: 5, unread: false, hero: false,
+      badge: 'TEAVITUS', time: '24. juuli',
+      iconWhite: 'assets/newspaper-white.svg', iconDark: 'assets/newspaper.svg',
+      title: 'Toimetus soovitab: nädala parimad lood',
+      snippet: 'Viis lugu, mida meie toimetajad sel nädalal esile tõstavad.',
+      ...EDITORIAL_BODY
+    },
+    {
+      id: 6, unread: false, hero: false,
+      badge: 'PAKKUMINE', time: '23. juuli',
+      iconWhite: 'assets/gift-white.svg', iconDark: 'assets/gift-dark.svg',
+      title: 'Sulle: –40% Kogupaketi aastatellimusest',
+      snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
+      ...OFFER_BODY
+    },
+    {
+      id: 7, unread: false, hero: false,
+      badge: 'TEAVITUS', time: '21. juuli',
+      iconWhite: 'assets/newspaper-white.svg', iconDark: 'assets/newspaper.svg',
+      title: 'Toimetus soovitab: nädala parimad lood',
+      snippet: 'Viis lugu, mida meie toimetajad sel nädalal esile tõstavad.',
+      ...EDITORIAL_BODY
+    },
+    {
+      id: 8, unread: false, hero: false,
+      badge: 'PAKKUMINE', time: '18. juuli',
+      iconWhite: 'assets/gift-white.svg', iconDark: 'assets/gift-dark.svg',
+      title: 'Sulle: –40% Kogupaketi aastatellimusest',
+      snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
+      ...OFFER_BODY
+    }
+  ];
+
+  const ICON_MAIL = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.75" y="3.25" width="12.5" height="9.5" rx="2"/><path d="M2.5 4.75 8 8.75l5.5-4"/></svg>';
+  const ICON_CHECK = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 6 12l7.5-8"/></svg>';
+  const ICON_TRASH = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h12"/><path d="M5.5 4V3a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 10.5 3v1"/><path d="M3.5 4l.6 9.1A1.5 1.5 0 0 0 5.6 14.5h4.8a1.5 1.5 0 0 0 1.5-1.4L12.5 4"/><path d="M6.5 7v4.5M9.5 7v4.5"/></svg>';
+
+  let currentTab = 'all';
+  let openMessageId = null;
+
+  const listEl = document.getElementById('message-list');
+  const badgeEl = document.getElementById('unread-badge');
+  const listView = document.getElementById('list-view');
+  const messageView = document.getElementById('message-view');
+  const tabAll = document.getElementById('tab-all');
+  const tabUnread = document.getElementById('tab-unread');
+  const kontoChip = document.getElementById('konto-chip');
+  const kontoMenuEl = document.getElementById('konto-menu');
+  const kontoMenuBadge = document.getElementById('konto-menu-badge');
+  const kontoDot = document.getElementById('konto-dot');
+
+  function unreadCount() {
+    return messages.filter(m => m.unread).length;
+  }
+
+  function renderList() {
+    const visible = currentTab === 'unread' ? messages.filter(m => m.unread) : messages;
+    listEl.innerHTML = '';
+
+    if (visible.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.textContent = currentTab === 'unread' ? 'Lugemata teavitusi pole.' : 'Teavitusi pole.';
+      listEl.appendChild(empty);
+    }
+
+    visible.forEach((msg, i) => {
+      const row = document.createElement('div');
+      row.className = 'message ' + (msg.unread ? 'unread' : 'read');
+      row.setAttribute('role', 'button');
+      row.setAttribute('tabindex', '0');
+      row.innerHTML = `
+        <span class="message-icon"><img src="${msg.unread ? msg.iconWhite : msg.iconDark}" alt=""></span>
+        <span class="message-text">
+          <span class="message-title">${msg.title}</span>
+          <span class="message-snippet">${msg.snippet}</span>
+        </span>
+        <span class="row-actions">
+          <span class="message-time">${msg.time}</span>
+          <button class="kebab-btn" aria-label="Rohkem valikuid" aria-haspopup="true"><img src="assets/kebab-dots.svg" alt=""></button>
+          <div class="kebab-menu">
+            <button class="kebab-item toggle-read">${msg.unread ? ICON_CHECK + 'Märgi loetuks' : ICON_MAIL + 'Märgi lugemata'}</button>
+            <button class="kebab-item danger delete">${ICON_TRASH}Kustuta</button>
+          </div>
+        </span>`;
+
+      const kebabBtn = row.querySelector('.kebab-btn');
+      const menu = row.querySelector('.kebab-menu');
+      kebabBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        const wasOpen = menu.classList.contains('open');
+        closeAllMenus();
+        if (!wasOpen) {
+          menu.classList.add('open');
+          kebabBtn.classList.add('open');
+        }
+      });
+      menu.addEventListener('click', e => e.stopPropagation());
+      row.querySelector('.toggle-read').addEventListener('click', () => {
+        msg.unread = !msg.unread;
+        renderList();
+      });
+      row.querySelector('.delete').addEventListener('click', () => deleteMessage(msg.id, row));
+      row.addEventListener('click', () => openMessage(msg.id));
+      row.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openMessage(msg.id); }
+      });
+      listEl.appendChild(row);
+      if (!msg.unread && i < visible.length - 1 && !visible[i + 1].unread) {
+        const divider = document.createElement('div');
+        divider.className = 'list-divider';
+        listEl.appendChild(divider);
+      }
+    });
+
+    const count = unreadCount();
+    badgeEl.textContent = count;
+    badgeEl.style.display = count > 0 ? 'flex' : 'none';
+    kontoMenuBadge.textContent = count;
+    kontoMenuBadge.style.display = count > 0 ? 'flex' : 'none';
+    kontoDot.style.display = count > 0 ? 'block' : 'none';
+  }
+
+  function openMessage(id) {
+    const msg = messages.find(m => m.id === id);
+    if (!msg) return;
+    msg.unread = false;
+    openMessageId = id;
+
+    document.getElementById('detail-badge').textContent = msg.badge;
+    document.getElementById('detail-time').textContent = msg.time;
+    document.getElementById('detail-title').textContent = msg.title;
+    document.getElementById('detail-hero').style.display = msg.hero ? 'block' : 'none';
+    document.getElementById('detail-lead').textContent = msg.lead;
+    document.getElementById('detail-rest').textContent = msg.rest;
+    const rest2 = document.getElementById('detail-rest2');
+    rest2.textContent = msg.rest2 || '';
+    rest2.style.display = msg.rest2 ? '' : 'none';
+    document.getElementById('detail-cta').textContent = msg.cta;
+    document.getElementById('detail-note').textContent = msg.note;
+
+    listView.hidden = true;
+    messageView.hidden = false;
+    window.scrollTo({ top: 0 });
+    renderList();
+  }
+
+  function backToList() {
+    openMessageId = null;
+    messageView.hidden = true;
+    listView.hidden = false;
+  }
+
+  function closeAllMenus() {
+    document.querySelectorAll('.kebab-menu.open').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.kebab-btn.open').forEach(b => b.classList.remove('open'));
+    kontoMenuEl.classList.remove('open');
+  }
+
+  function toggleKontoMenu() {
+    const wasOpen = kontoMenuEl.classList.contains('open');
+    closeAllMenus();
+    if (!wasOpen) kontoMenuEl.classList.add('open');
+  }
+
+  function deleteMessage(id, row) {
+    row.classList.add('removing');
+    setTimeout(() => {
+      const i = messages.findIndex(m => m.id === id);
+      if (i > -1) messages.splice(i, 1);
+      if (openMessageId === id) backToList();
+      renderList();
+    }, 180);
+  }
+
+  function setTab(tab) {
+    currentTab = tab;
+    tabAll.classList.toggle('active', tab === 'all');
+    tabUnread.classList.toggle('active', tab === 'unread');
+    renderList();
+  }
+
+  tabAll.addEventListener('click', () => setTab('all'));
+  tabUnread.addEventListener('click', () => setTab('unread'));
+  document.getElementById('mark-all').addEventListener('click', () => { messages.forEach(m => m.unread = false); renderList(); });
+  document.getElementById('back-btn').addEventListener('click', backToList);
+  kontoChip.addEventListener('click', e => { e.stopPropagation(); toggleKontoMenu(); });
+  kontoChip.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); toggleKontoMenu(); }
+  });
+  kontoMenuEl.addEventListener('click', e => e.stopPropagation());
+  document.getElementById('konto-menu-teavitused').addEventListener('click', () => {
+    closeAllMenus();
+    backToList();
+    document.querySelector('.inbox').scrollIntoView({ behavior: 'smooth' });
+  });
+  document.addEventListener('click', closeAllMenus);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closeAllMenus(); backToList(); }
+  });
+
+  renderList();
+  if (location.hash === '#open') openMessage(1);
+  if (location.hash === '#menu') document.querySelectorAll('.kebab-btn')[2]?.click();
+  if (location.hash === '#unread') setTab('unread');
+  if (location.hash === '#konto') toggleKontoMenu();
+</script>
+</body>
+</html>
