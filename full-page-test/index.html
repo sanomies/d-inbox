@@ -280,9 +280,11 @@
   /* ── Message rows ────────────────────────────────── */
   .message-list { display: flex; flex-direction: column; gap: 8px; }
   .message {
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 36px 1fr auto 24px;
+    grid-template-areas: "icon text meta kebab";
+    column-gap: 16px;
+    align-items: start;
     padding: 16px;
     cursor: pointer;
     text-align: left;
@@ -291,6 +293,10 @@
     font-family: 'Inter', sans-serif;
     width: 100%;
   }
+  .message-icon { grid-area: icon; }
+  .message-text { grid-area: text; min-width: 0; }
+  .row-meta { grid-area: meta; }
+  .row-actions { grid-area: kebab; }
   .message.unread {
     background: var(--delfi-lightblue);
     border-radius: 16px;
@@ -345,6 +351,71 @@
     transform: translateX(12px);
     transition: opacity 0.18s ease, transform 0.18s ease;
   }
+
+  /* ── Category pills ──────────────────────────────── */
+  .row-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+  .row-badges { display: flex; gap: 4px; align-items: center; }
+  .pill {
+    background: var(--delfi-lightblue);
+    padding: 8px;
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1;
+    color: #000;
+    white-space: nowrap;
+  }
+  .message.unread .pill { background: var(--delfi-white); }
+  .pill.expired { background: rgba(250, 4, 79, 0.15); color: var(--delfi-black); }
+  .message.unread .pill.expired { background: rgba(250, 4, 79, 0.15); }
+
+  /* ── Pagination ──────────────────────────────────── */
+  .pagination {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    padding-top: 24px;
+  }
+  .page-arrow {
+    border: none;
+    background: none;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    cursor: pointer;
+    border-radius: 100px;
+  }
+  .page-arrow:hover:not(:disabled) { background: var(--delfi-topbar); }
+  .page-arrow:disabled { opacity: 0.35; cursor: default; }
+  .page-arrow img { width: 24px; height: 24px; display: block; }
+  .page-numbers { display: flex; gap: 20px; align-items: center; }
+  .page-num {
+    border: none;
+    background: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #5c6e7f;
+    min-width: 24px;
+    height: 24px;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0 3px;
+  }
+  .page-num:hover:not(.active) { color: var(--delfi-black); }
+  .page-num.active { background: var(--delfi-blue); color: var(--delfi-white); }
+  .page-ellipsis { font-size: 14px; color: #5c6e7f; }
 
   /* ── Row kebab menu ──────────────────────────────── */
   .row-actions {
@@ -437,17 +508,21 @@
   @keyframes view-fade { from { opacity: 0; } to { opacity: 1; } }
   .view-header {
     display: flex;
-    gap: 4px;
+    gap: 8px;
     align-items: center;
     padding: 16px 0;
   }
   .back-btn {
     border: none;
     background: none;
-    padding: 7px;
-    margin: -7px;
+    width: 24px;
+    height: 24px;
+    padding: 0;
     border-radius: 100px;
     display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
     cursor: pointer;
   }
   .back-btn:hover { background: var(--delfi-topbar); }
@@ -469,16 +544,6 @@
     gap: 16px;
   }
   .detail-meta { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
-  .detail-badge {
-    background: var(--delfi-lightblue);
-    padding: 8px;
-    border-radius: 100px;
-    font-size: 10px;
-    font-weight: 600;
-    line-height: 1;
-    color: #000;
-    white-space: nowrap;
-  }
   .detail-time { font-size: 12px; color: var(--delfi-darkgray); }
   .detail-title { font-size: 18px; font-weight: 600; line-height: 1.4; }
   .detail-divider {
@@ -517,6 +582,14 @@
   }
   .hero-logo-piece { position: absolute; }
   .hero-logo-piece img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .f-sub { inset: 71.8% 90.21% 12.52% 3.99%; }
+  .f-v0 { inset: 75% 86.63% 15.9% 11.67%; }
+  .f-v1 { inset: 77.63% 84.4% 15.78% 13.49%; }
+  .f-v2 { inset: 75% 83.26% 15.9% 16%; }
+  .f-v3 { inset: 77.63% 81.34% 15.9% 17.17%; }
+  .f-v4 { inset: 77.63% 77.41% 15.9% 18.99%; }
+  .f-v5 { inset: 77.75% 74.79% 15.77% 23.02%; }
+  .f-v6 { inset: 77.63% 72.39% 15.78% 25.55%; }
   .hero-pill {
     position: absolute;
     left: -30px;
@@ -569,15 +642,111 @@
   .cta-button:hover { background: #2c46d6; }
   .cta-note { font-size: 12px; color: var(--delfi-darkgray); }
 
+  /* ── Mobile chrome (hidden on desktop) ───────────── */
+  .mobile-header, .mobile-tabbar, .mark-all-mobile { display: none; }
+
   @media (max-width: 1240px) {
     .nav-links { display: none; }
+  }
+
+  /* ── Mobile layout ───────────────────────────────── */
+  @media (max-width: 768px) {
+    body { padding-bottom: 100px; }
+    .desktop-header { display: none; }
+
+    .mobile-header { display: block; width: 100%; }
+    .mobile-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      border-bottom: 1px solid var(--delfi-separatorgray);
+    }
+    .mobile-logo { width: 62.28px; height: 22px; display: block; }
+    .mobile-header-right { display: flex; gap: 16px; align-items: center; }
+    .mobile-rus { font-size: 12px; font-weight: 600; color: #5c6e7f; }
+
+    .mobile-tabbar {
+      display: flex;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      justify-content: space-between;
+      padding: 6px;
+      background: var(--delfi-white);
+      filter: drop-shadow(0px 0px 8px rgba(0, 0, 0, 0.25));
+      z-index: 150;
+    }
+    .tabbar-item {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: none;
+      border-radius: 16px;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      color: var(--delfi-black);
+      cursor: pointer;
+    }
+    .tabbar-item img { width: 24px; height: 24px; display: block; }
+    .tabbar-item.active { background: var(--delfi-lightblue); }
+
+    /* List */
+    .inbox { width: 100%; max-width: none; padding: 0 16px; }
+    .inbox-header { display: flex; justify-content: space-between; align-items: center; }
+    .inbox-title { font-size: 22px; }
+    .mark-all-mobile { display: block; }
+    .mark-all-desktop { display: none; }
+
+    .message {
+      padding: 12px;
+      column-gap: 12px;
+      row-gap: 4px;
+      grid-template-columns: 36px 1fr 24px;
+      grid-template-areas:
+        "icon text kebab"
+        "icon meta kebab";
+    }
+    .row-meta {
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Message view */
+    .view-title { font-size: 22px; }
+    .back-btn { background: var(--delfi-topbar); }
+    .view-content { gap: 16px; }
+    .view-meta-row { flex-direction: column; align-items: stretch; gap: 16px; }
+    .detail-meta { justify-content: space-between; }
+    .detail-title { font-size: 16px; }
+    .detail-hero { height: 144px; }
+    .hero-phone-wrap { left: 86px; top: -7px; width: 236.24px; height: 235.3px; }
+    .hero-phone-rotate img { width: 184.68px; height: 183.1px; }
+    .f-sub { inset: 68.75% 86.04% 15.97% 6.82%; }
+    .f-v0 { inset: 71.86% 81.63% 19.26% 16.28%; }
+    .f-v1 { inset: 74.43% 78.88% 19.14% 18.52%; }
+    .f-v2 { inset: 71.86% 77.47% 19.26% 21.62%; }
+    .f-v3 { inset: 74.43% 75.11% 19.26% 23.06%; }
+    .f-v4 { inset: 74.43% 70.26% 19.26% 25.3%; }
+    .f-v5 { inset: 74.55% 67.03% 19.14% 30.27%; }
+    .f-v6 { inset: 74.43% 64.07% 19.14% 33.39%; }
+    .cta-button { width: 100%; }
   }
 </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <header style="width:100%">
+  <!-- Navigation (desktop) -->
+  <header class="desktop-header" style="width:100%">
     <div class="utility-bar">
       <div class="utility-bar-inner">
         <div class="utility-center">
@@ -679,18 +848,43 @@
     </div>
   </header>
 
+  <!-- Navigation (mobile) -->
+  <header class="mobile-header">
+    <div class="mobile-header-bar">
+      <a href="https://www.delfi.ee" style="display: flex"><img class="mobile-logo" src="assets/delfi-logo.svg" alt="Delfi"></a>
+      <div class="mobile-header-right">
+        <span class="mobile-rus">RUS</span>
+        <div class="konto-chip">
+          <div class="konto-icon">
+            <div class="konto-icon-leaf"><img src="assets/konto-icon.svg" alt=""></div>
+          </div>
+          <span>Konto</span>
+          <div class="konto-dot"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
   <!-- Inbox -->
   <main class="inbox">
     <div id="list-view">
-      <h1 class="inbox-title">Teavitused</h1>
+      <div class="inbox-header">
+        <h1 class="inbox-title">Teavitused</h1>
+        <button class="mark-all mark-all-mobile">Märgi kõik loetuks</button>
+      </div>
       <div class="tabs">
         <div class="tab-group">
           <button class="tab active" id="tab-all">Kõik</button>
           <button class="tab" id="tab-unread">Lugemata <span class="tab-badge" id="unread-badge">2</span></button>
         </div>
-        <button class="mark-all" id="mark-all">Märgi kõik loetuks</button>
+        <button class="mark-all mark-all-desktop">Märgi kõik loetuks</button>
       </div>
       <div class="message-list" id="message-list"></div>
+      <nav class="pagination" aria-label="Lehed">
+        <button class="page-arrow" id="page-prev" aria-label="Eelmine leht"><img src="assets/arrow-left.svg" alt=""></button>
+        <div class="page-numbers" id="page-numbers"></div>
+        <button class="page-arrow" id="page-next" aria-label="Järgmine leht"><img src="assets/arrow-right.svg" alt=""></button>
+      </nav>
     </div>
 
     <!-- Full-page message view -->
@@ -705,7 +899,7 @@
         <div class="view-meta-row">
           <h2 class="detail-title" id="detail-title"></h2>
           <div class="detail-meta">
-            <span class="detail-badge" id="detail-badge">PAKKUMINE</span>
+            <span class="row-badges" id="detail-badges"></span>
             <span class="detail-time" id="detail-time">Täna 09:12</span>
           </div>
         </div>
@@ -714,14 +908,14 @@
           <div class="hero-phone-wrap">
             <div class="hero-phone-rotate"><img src="assets/hero-fairmus.png" alt=""></div>
           </div>
-          <div class="hero-logo-piece" style="inset: 71.8% 90.21% 12.52% 3.99%"><img src="assets/fairmus-subtract.svg" alt=""></div>
-          <div class="hero-logo-piece" style="inset: 75% 86.63% 15.9% 11.67%"><img src="assets/fairmus-v0.svg" alt=""></div>
-          <div class="hero-logo-piece" style="inset: 77.63% 84.4% 15.78% 13.49%"><img src="assets/fairmus-v1.svg" alt=""></div>
-          <div class="hero-logo-piece" style="inset: 75% 83.26% 15.9% 16%"><img src="assets/fairmus-v2.svg" alt=""></div>
-          <div class="hero-logo-piece" style="inset: 77.63% 81.34% 15.9% 17.17%"><img src="assets/fairmus-v3.svg" alt=""></div>
-          <div class="hero-logo-piece" style="inset: 77.63% 77.41% 15.9% 18.99%"><img src="assets/fairmus-v4.svg" alt=""></div>
-          <div class="hero-logo-piece" style="inset: 77.75% 74.79% 15.77% 23.02%"><img src="assets/fairmus-v5.svg" alt=""></div>
-          <div class="hero-logo-piece" style="inset: 77.63% 72.39% 15.78% 25.55%"><img src="assets/fairmus-v6.svg" alt=""></div>
+          <div class="hero-logo-piece f-sub"><img src="assets/fairmus-subtract.svg" alt=""></div>
+          <div class="hero-logo-piece f-v0"><img src="assets/fairmus-v0.svg" alt=""></div>
+          <div class="hero-logo-piece f-v1"><img src="assets/fairmus-v1.svg" alt=""></div>
+          <div class="hero-logo-piece f-v2"><img src="assets/fairmus-v2.svg" alt=""></div>
+          <div class="hero-logo-piece f-v3"><img src="assets/fairmus-v3.svg" alt=""></div>
+          <div class="hero-logo-piece f-v4"><img src="assets/fairmus-v4.svg" alt=""></div>
+          <div class="hero-logo-piece f-v5"><img src="assets/fairmus-v5.svg" alt=""></div>
+          <div class="hero-logo-piece f-v6"><img src="assets/fairmus-v6.svg" alt=""></div>
           <div class="hero-pill"><span>TELLIJA EELIS</span></div>
           <div class="hero-inset-shadow"></div>
         </div>
@@ -737,6 +931,15 @@
       </div>
     </section>
   </main>
+
+  <!-- Mobile bottom tab bar -->
+  <nav class="mobile-tabbar" aria-label="Mobiilimenüü">
+    <button class="tabbar-item"><img src="assets/tab-home.svg" alt=""><span>Delfi</span></button>
+    <button class="tabbar-item"><img src="assets/tab-viimased.svg" alt=""><span>Viimased</span></button>
+    <button class="tabbar-item"><img src="assets/tab-arileht.svg" alt=""><span>Ärileht</span></button>
+    <button class="tabbar-item"><img src="assets/tab-tasku.svg" alt=""><span>Tasku</span></button>
+    <button class="tabbar-item active"><img src="assets/tab-menu.svg" alt=""><span>Menüü</span></button>
+  </nav>
 
 <script>
   const OFFER_BODY = {
@@ -774,7 +977,7 @@
     },
     {
       id: 3, unread: false, hero: false,
-      badge: 'TEAVITUS', time: 'Eile 17:30',
+      badge: 'SISU', time: 'Eile 17:30',
       iconWhite: 'assets/newspaper-white.svg', iconDark: 'assets/newspaper.svg',
       title: 'Toimetus soovitab: nädala parimad lood',
       snippet: 'Viis lugu, mida meie toimetajad sel nädalal esile tõstavad.',
@@ -782,7 +985,7 @@
     },
     {
       id: 4, unread: false, hero: false,
-      badge: 'PAKKUMINE', time: 'Eile 11:02',
+      badge: 'UUENDUS', time: 'Eile 11:02',
       iconWhite: 'assets/gift-white.svg', iconDark: 'assets/gift-dark.svg',
       title: 'Sulle: –40% Kogupaketi aastatellimusest',
       snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
@@ -790,37 +993,35 @@
     },
     {
       id: 5, unread: false, hero: false,
-      badge: 'TEAVITUS', time: '24. juuli',
+      badge: 'UUENDUS', time: '24. juuli',
       iconWhite: 'assets/newspaper-white.svg', iconDark: 'assets/newspaper.svg',
       title: 'Toimetus soovitab: nädala parimad lood',
       snippet: 'Viis lugu, mida meie toimetajad sel nädalal esile tõstavad.',
       ...EDITORIAL_BODY
     },
     {
-      id: 6, unread: false, hero: false,
+      id: 6, unread: false, hero: false, expired: true,
       badge: 'PAKKUMINE', time: '23. juuli',
       iconWhite: 'assets/gift-white.svg', iconDark: 'assets/gift-dark.svg',
       title: 'Sulle: –40% Kogupaketi aastatellimusest',
       snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
-      ...OFFER_BODY
+      ...OFFER_BODY,
+      note: 'Pakkumine aegus 23. juuli 2026.'
     },
     {
       id: 7, unread: false, hero: false,
-      badge: 'TEAVITUS', time: '21. juuli',
+      badge: 'SISU', time: '21. juuli',
       iconWhite: 'assets/newspaper-white.svg', iconDark: 'assets/newspaper.svg',
       title: 'Toimetus soovitab: nädala parimad lood',
       snippet: 'Viis lugu, mida meie toimetajad sel nädalal esile tõstavad.',
       ...EDITORIAL_BODY
-    },
-    {
-      id: 8, unread: false, hero: false,
-      badge: 'PAKKUMINE', time: '18. juuli',
-      iconWhite: 'assets/gift-white.svg', iconDark: 'assets/gift-dark.svg',
-      title: 'Sulle: –40% Kogupaketi aastatellimusest',
-      snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
-      ...OFFER_BODY
     }
   ];
+
+  function pillsHTML(msg) {
+    return (msg.expired ? '<span class="pill expired">AEGUNUD</span>' : '') +
+      `<span class="pill">${msg.badge}</span>`;
+  }
 
   const ICON_MAIL = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.75" y="3.25" width="12.5" height="9.5" rx="2"/><path d="M2.5 4.75 8 8.75l5.5-4"/></svg>';
   const ICON_CHECK = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 6 12l7.5-8"/></svg>';
@@ -838,7 +1039,7 @@
   const kontoChip = document.getElementById('konto-chip');
   const kontoMenuEl = document.getElementById('konto-menu');
   const kontoMenuBadge = document.getElementById('konto-menu-badge');
-  const kontoDot = document.getElementById('konto-dot');
+  const kontoDots = document.querySelectorAll('.konto-dot');
 
   function unreadCount() {
     return messages.filter(m => m.unread).length;
@@ -866,8 +1067,11 @@
           <span class="message-title">${msg.title}</span>
           <span class="message-snippet">${msg.snippet}</span>
         </span>
-        <span class="row-actions">
+        <span class="row-meta">
           <span class="message-time">${msg.time}</span>
+          <span class="row-badges">${pillsHTML(msg)}</span>
+        </span>
+        <span class="row-actions">
           <button class="kebab-btn" aria-label="Rohkem valikuid" aria-haspopup="true"><img src="assets/kebab-dots.svg" alt=""></button>
           <div class="kebab-menu">
             <button class="kebab-item toggle-read">${msg.unread ? ICON_CHECK + 'Märgi loetuks' : ICON_MAIL + 'Märgi lugemata'}</button>
@@ -909,7 +1113,7 @@
     badgeEl.style.display = count > 0 ? 'flex' : 'none';
     kontoMenuBadge.textContent = count;
     kontoMenuBadge.style.display = count > 0 ? 'flex' : 'none';
-    kontoDot.style.display = count > 0 ? 'block' : 'none';
+    kontoDots.forEach(d => d.style.display = count > 0 ? 'block' : 'none');
   }
 
   function openMessage(id) {
@@ -918,7 +1122,7 @@
     msg.unread = false;
     openMessageId = id;
 
-    document.getElementById('detail-badge').textContent = msg.badge;
+    document.getElementById('detail-badges').innerHTML = pillsHTML(msg);
     document.getElementById('detail-time').textContent = msg.time;
     document.getElementById('detail-title').textContent = msg.title;
     document.getElementById('detail-hero').style.display = msg.hero ? 'block' : 'none';
@@ -971,9 +1175,46 @@
     renderList();
   }
 
+  const TOTAL_PAGES = 15;
+  let currentPage = 1;
+  const pagePrev = document.getElementById('page-prev');
+  const pageNext = document.getElementById('page-next');
+
+  function renderPagination() {
+    const el = document.getElementById('page-numbers');
+    let pages;
+    if (currentPage <= 3) pages = [1, 2, 3, '…', TOTAL_PAGES];
+    else if (currentPage >= TOTAL_PAGES - 2) pages = [1, '…', TOTAL_PAGES - 2, TOTAL_PAGES - 1, TOTAL_PAGES];
+    else pages = [1, '…', currentPage - 1, currentPage, currentPage + 1, '…', TOTAL_PAGES];
+
+    el.innerHTML = '';
+    pages.forEach(p => {
+      if (p === '…') {
+        const dots = document.createElement('span');
+        dots.className = 'page-ellipsis';
+        dots.textContent = '…';
+        el.appendChild(dots);
+        return;
+      }
+      const btn = document.createElement('button');
+      btn.className = 'page-num' + (p === currentPage ? ' active' : '');
+      btn.textContent = p;
+      btn.addEventListener('click', () => { currentPage = p; renderPagination(); });
+      el.appendChild(btn);
+    });
+    pagePrev.disabled = currentPage === 1;
+    pageNext.disabled = currentPage === TOTAL_PAGES;
+  }
+
+  pagePrev.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderPagination(); } });
+  pageNext.addEventListener('click', () => { if (currentPage < TOTAL_PAGES) { currentPage++; renderPagination(); } });
+  renderPagination();
+
   tabAll.addEventListener('click', () => setTab('all'));
   tabUnread.addEventListener('click', () => setTab('unread'));
-  document.getElementById('mark-all').addEventListener('click', () => { messages.forEach(m => m.unread = false); renderList(); });
+  document.querySelectorAll('.mark-all').forEach(btn =>
+    btn.addEventListener('click', () => { messages.forEach(m => m.unread = false); renderList(); })
+  );
   document.getElementById('back-btn').addEventListener('click', backToList);
   kontoChip.addEventListener('click', e => { e.stopPropagation(); toggleKontoMenu(); });
   kontoChip.addEventListener('keydown', e => {
