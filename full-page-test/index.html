@@ -105,17 +105,16 @@
   .nav-links span:hover { color: var(--delfi-blue); }
   .nav-right { display: flex; gap: 16px; align-items: center; }
   .konto-chip {
-    position: relative;
     background: var(--delfi-topbar);
     display: flex;
-    gap: 2px;
+    gap: 4px;
     align-items: center;
     justify-content: center;
     padding: 4px 8px 4px 4px;
     border-radius: 100px;
-    width: 80px;
     cursor: pointer;
   }
+  .konto-chip-inner { display: flex; gap: 2px; align-items: center; }
   .konto-icon {
     position: relative;
     width: 24px;
@@ -127,17 +126,7 @@
     inset: 12.5% 2.93% 14.38% 12.5%;
   }
   .konto-icon-leaf img { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .konto-chip span { font-size: 12px; font-weight: 600; color: var(--delfi-black); }
-  .konto-dot {
-    position: absolute;
-    top: 0;
-    right: 0.17px;
-    width: 8px;
-    height: 8px;
-    background: var(--delfi-blue);
-    outline: 2px solid var(--delfi-white);
-    border-radius: 100px;
-  }
+  .konto-chip-inner span { font-size: 12px; font-weight: 600; color: var(--delfi-black); }
   .nav-icons { display: flex; gap: 21px; align-items: center; }
 
   /* ── Konto dropdown menu ─────────────────────────── */
@@ -767,11 +756,13 @@
         </nav>
         <div class="nav-right">
           <div class="konto-chip" id="konto-chip" role="button" tabindex="0" aria-haspopup="true">
-            <div class="konto-icon">
-              <div class="konto-icon-leaf"><img src="assets/konto-icon.svg" alt=""></div>
+            <div class="konto-chip-inner">
+              <div class="konto-icon">
+                <div class="konto-icon-leaf"><img src="assets/konto-icon.svg" alt=""></div>
+              </div>
+              <span>Konto</span>
             </div>
-            <span>Konto</span>
-            <div class="konto-dot" id="konto-dot"></div>
+            <span class="tab-badge konto-badge">2</span>
           </div>
           <div class="nav-icons">
             <img class="icon-search" src="assets/search.svg" alt="Otsi">
@@ -847,11 +838,13 @@
       <div class="mobile-header-right">
         <span class="mobile-rus">RUS</span>
         <div class="konto-chip">
-          <div class="konto-icon">
-            <div class="konto-icon-leaf"><img src="assets/konto-icon.svg" alt=""></div>
+          <div class="konto-chip-inner">
+            <div class="konto-icon">
+              <div class="konto-icon-leaf"><img src="assets/konto-icon.svg" alt=""></div>
+            </div>
+            <span>Konto</span>
           </div>
-          <span>Konto</span>
-          <div class="konto-dot"></div>
+          <span class="tab-badge konto-badge">2</span>
         </div>
       </div>
     </div>
@@ -1030,7 +1023,7 @@
   const kontoChip = document.getElementById('konto-chip');
   const kontoMenuEl = document.getElementById('konto-menu');
   const kontoMenuBadge = document.getElementById('konto-menu-badge');
-  const kontoDots = document.querySelectorAll('.konto-dot');
+  const kontoBadges = document.querySelectorAll('.konto-badge');
 
   function unreadCount() {
     return messages.filter(m => m.unread).length;
@@ -1104,7 +1097,7 @@
     badgeEl.style.display = count > 0 ? 'flex' : 'none';
     kontoMenuBadge.textContent = count;
     kontoMenuBadge.style.display = count > 0 ? 'flex' : 'none';
-    kontoDots.forEach(d => d.style.display = count > 0 ? 'block' : 'none');
+    kontoBadges.forEach(b => { b.textContent = count; b.style.display = count > 0 ? 'flex' : 'none'; });
   }
 
   function openMessage(id) {
