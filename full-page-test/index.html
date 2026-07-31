@@ -352,28 +352,25 @@
     transition: opacity 0.18s ease, transform 0.18s ease;
   }
 
-  /* ── Category pills ──────────────────────────────── */
+  /* ── Expired pill ────────────────────────────────── */
   .row-meta {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: flex-end;
+    gap: 8px;
+    align-items: center;
     flex-shrink: 0;
   }
-  .row-badges { display: flex; gap: 4px; align-items: center; }
+  .row-badges { display: flex; gap: 8px; align-items: center; }
+  .row-badges:empty { display: none; }
   .pill {
-    background: var(--delfi-lightblue);
+    background: rgba(250, 4, 79, 0.15);
     padding: 8px;
     border-radius: 100px;
     font-size: 10px;
     font-weight: 600;
     line-height: 1;
-    color: #000;
+    color: var(--delfi-black);
     white-space: nowrap;
   }
-  .message.unread .pill { background: var(--delfi-white); }
-  .pill.expired { background: rgba(250, 4, 79, 0.15); color: var(--delfi-black); }
-  .message.unread .pill.expired { background: rgba(250, 4, 79, 0.15); }
 
   /* ── Pagination ──────────────────────────────────── */
   .pagination {
@@ -715,12 +712,6 @@
         "icon meta kebab";
     }
     .kebab-btn { opacity: 1; }
-    .row-meta {
-      flex-direction: row-reverse;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 8px;
-    }
 
     /* Message view */
     .view-title { font-size: 22px; }
@@ -959,7 +950,7 @@
   const messages = [
     {
       id: 1, unread: true, hero: true,
-      badge: 'PAKKUMINE', time: 'Täna 09:12',
+      time: 'Täna 09:12',
       iconWhite: 'assets/gift-white.svg', iconDark: 'assets/gift-dark.svg',
       title: 'Fairmusi sisu suve lõpuni täiesti tasuta!',
       snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
@@ -970,7 +961,7 @@
     },
     {
       id: 2, unread: true, hero: false,
-      badge: 'PAKKUMINE', time: 'Täna 08:47',
+      time: 'Täna 08:47',
       iconWhite: 'assets/sale-white.svg', iconDark: 'assets/sale-dark.svg',
       title: 'Sulle: –40% Kogupaketi aastatellimusest',
       snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
@@ -978,7 +969,7 @@
     },
     {
       id: 3, unread: false, hero: false,
-      badge: 'SISU', time: 'Eile 17:30',
+      time: 'Eile 17:30',
       iconWhite: 'assets/newspaper-white.svg', iconDark: 'assets/newspaper.svg',
       title: 'Toimetus soovitab: nädala parimad lood',
       snippet: 'Viis lugu, mida meie toimetajad sel nädalal esile tõstavad.',
@@ -986,7 +977,7 @@
     },
     {
       id: 4, unread: false, hero: false,
-      badge: 'UUENDUS', time: 'Eile 11:02',
+      time: 'Eile 11:02',
       iconWhite: 'assets/gift-white.svg', iconDark: 'assets/gift-dark.svg',
       title: 'Sulle: –40% Kogupaketi aastatellimusest',
       snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
@@ -994,7 +985,7 @@
     },
     {
       id: 5, unread: false, hero: false,
-      badge: 'UUENDUS', time: '24. juuli',
+      time: '24. juuli',
       iconWhite: 'assets/newspaper-white.svg', iconDark: 'assets/newspaper.svg',
       title: 'Toimetus soovitab: nädala parimad lood',
       snippet: 'Viis lugu, mida meie toimetajad sel nädalal esile tõstavad.',
@@ -1002,7 +993,7 @@
     },
     {
       id: 6, unread: false, hero: false, expired: true,
-      badge: 'PAKKUMINE', time: '23. juuli',
+      time: '23. juuli',
       iconWhite: 'assets/gift-white.svg', iconDark: 'assets/gift-dark.svg',
       title: 'Sulle: –40% Kogupaketi aastatellimusest',
       snippet: 'Pikenda tellimust juuli lõpuni ja säästa 43,80 €.',
@@ -1011,7 +1002,7 @@
     },
     {
       id: 7, unread: false, hero: false,
-      badge: 'SISU', time: '21. juuli',
+      time: '21. juuli',
       iconWhite: 'assets/newspaper-white.svg', iconDark: 'assets/newspaper.svg',
       title: 'Toimetus soovitab: nädala parimad lood',
       snippet: 'Viis lugu, mida meie toimetajad sel nädalal esile tõstavad.',
@@ -1020,8 +1011,7 @@
   ];
 
   function pillsHTML(msg) {
-    return (msg.expired ? '<span class="pill expired">AEGUNUD</span>' : '') +
-      `<span class="pill">${msg.badge}</span>`;
+    return msg.expired ? '<span class="pill">AEGUNUD</span>' : '';
   }
 
   const ICON_MAIL = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.75" y="3.25" width="12.5" height="9.5" rx="2"/><path d="M2.5 4.75 8 8.75l5.5-4"/></svg>';
@@ -1069,8 +1059,8 @@
           <span class="message-snippet">${msg.snippet}</span>
         </span>
         <span class="row-meta">
-          <span class="message-time">${msg.time}</span>
           <span class="row-badges">${pillsHTML(msg)}</span>
+          <span class="message-time">${msg.time}</span>
         </span>
         <span class="row-actions">
           <button class="kebab-btn" aria-label="Rohkem valikuid" aria-haspopup="true"><img src="assets/kebab-dots.svg" alt=""></button>
