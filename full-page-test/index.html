@@ -466,34 +466,34 @@
     right: 0;
     background: var(--delfi-white);
     border: 1px solid var(--delfi-separatorgray);
-    border-radius: 12px;
-    box-shadow: 0px 2px 6px 0px rgba(15, 26, 46, 0.06), 0px 12px 32px -8px rgba(15, 26, 46, 0.18);
-    padding: 4px;
-    min-width: 184px;
+    border-radius: 16px;
+    box-shadow: 0px 4px 3px 0px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    width: 200px;
     display: none;
     z-index: 50;
   }
   .kebab-menu.open { display: block; }
   .kebab-item {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
     width: 100%;
     border: none;
     background: none;
-    padding: 10px 12px;
+    padding: 8px;
     border-radius: 8px;
     font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 16px;
     color: var(--delfi-black);
     text-align: left;
     white-space: nowrap;
     cursor: pointer;
   }
   .kebab-item:hover { background: #f2f5f7; }
-  .kebab-item.danger { color: #d92d20; }
-  .kebab-item svg { flex-shrink: 0; }
+  .kebab-item img { width: 24px; height: 24px; display: block; flex-shrink: 0; }
 
   /* ── Full-page message view ──────────────────────── */
   .message-view {
@@ -1014,9 +1014,9 @@
     return msg.expired ? '<span class="pill">AEGUNUD</span>' : '';
   }
 
-  const ICON_MAIL = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.75" y="3.25" width="12.5" height="9.5" rx="2"/><path d="M2.5 4.75 8 8.75l5.5-4"/></svg>';
-  const ICON_CHECK = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 8.5 6 12l7.5-8"/></svg>';
-  const ICON_TRASH = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h12"/><path d="M5.5 4V3a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 10.5 3v1"/><path d="M3.5 4l.6 9.1A1.5 1.5 0 0 0 5.6 14.5h4.8a1.5 1.5 0 0 0 1.5-1.4L12.5 4"/><path d="M6.5 7v4.5M9.5 7v4.5"/></svg>';
+  const ICON_MAIL = '<img src="assets/kebab-mail.svg" alt="">';
+  const ICON_CHECK = '<img src="assets/kebab-mail-check.svg" alt="">';
+  const ICON_TRASH = '<img src="assets/kebab-trash.svg" alt="">';
 
   let currentTab = 'all';
   let openMessageId = null;
@@ -1066,7 +1066,7 @@
           <button class="kebab-btn" aria-label="Rohkem valikuid" aria-haspopup="true"><img src="assets/kebab-dots.svg" alt=""></button>
           <div class="kebab-menu">
             <button class="kebab-item toggle-read">${msg.unread ? ICON_CHECK + 'Märgi loetuks' : ICON_MAIL + 'Märgi lugemata'}</button>
-            <button class="kebab-item danger delete">${ICON_TRASH}Kustuta</button>
+            <button class="kebab-item delete">${ICON_TRASH}Kustuta</button>
           </div>
         </span>`;
 
